@@ -123,8 +123,8 @@ def fetch_instructions(prompt_name: str) -> str:
         return f.read()
 
 
-# Expose the ASGI app for deployment platforms
-app = mcp.http_app()
+# Expose the ASGI app for deployment platforms (using Streamable HTTP transport)
+app = mcp.streamable_http_app()
 
 if __name__ == "__main__":
     import uvicorn
