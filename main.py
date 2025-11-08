@@ -124,7 +124,7 @@ def fetch_instructions(prompt_name: str) -> str:
 
 
 # Expose the ASGI app for deployment platforms
-app = mcp.app
+app = mcp.http_app()
 
 if __name__ == "__main__":
     import uvicorn
