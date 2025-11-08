@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+python-dotenv
+pydantic
+mcp
+# Add any other dependencies your MCP server needs
+# For example, if you're using YouTube transcripts:
+youtube-transcript-api
+httpx
+pyjwt
