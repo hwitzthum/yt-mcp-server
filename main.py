@@ -123,7 +123,10 @@ def fetch_instructions(prompt_name: str) -> str:
         return f.read()
 
 
+# Expose the ASGI app for deployment platforms
+app = mcp.app
+
 if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("PORT", 10000))
-    uvicorn.run(mcp, host="0.0.0.0", port=port)
+    uvicorn.run(app, host="0.0.0.0", port=port)
