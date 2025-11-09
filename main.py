@@ -136,7 +136,7 @@ def fetch_instructions(prompt_name: str) -> str:
 
 
 # Expose the ASGI app for deployment platforms (using Streamable HTTP transport)
-app = mcp.streamable_http_app()
+app = mcp.sse_app()
 
 if __name__ == "__main__":
     import uvicorn
