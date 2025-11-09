@@ -83,24 +83,36 @@ def fetch_video_transcript(url: str) -> str:
         proxy_password = os.getenv("PROXY_PASSWORD")
         proxy_url_base = os.getenv("PROXY_URL")
 
-        if not proxy_username or not proxy_password or not proxy_url_base:
-            raise ValueError("Proxy credentials not configured. Set PROXY_USERNAME, PROXY_PASSWORD, and PROXY_URL environment variables.")
-
-        # Construct proxy URLs with credentials
-        http_proxy_url = f"http://{proxy_username}:{proxy_password}@{proxy_url_base}"
-        https_proxy_url = f"https://{proxy_username}:{proxy_password}@{proxy_url_base}"
-
-        proxy_config = GenericProxyConfig(
-            http_url=http_proxy_url,
-            https_url=https_proxy_url
+        # Check if proxy credentials are properly configured (not placeholder values)
+        use_proxy = (
+            proxy_username and
+            proxy_password and
+            proxy_url_base and
+            proxy_username != "your-proxy-username" and
+            proxy_password != "your-proxy-password" and
+            proxy_url_base != "proxy.example.com:8080"
         )
 
-        ytt_api = YouTubeTranscriptApi(proxy_config=proxy_config)
-        transcript = ytt_api.fetch(video_id)
+        if use_proxy:
+            # Construct proxy URLs with credentials
+            http_proxy_url = f"http://{proxy_username}:{proxy_password}@{proxy_url_base}"
+            https_proxy_url = f"https://{proxy_username}:{proxy_password}@{proxy_url_base}"
+
+            proxy_config = GenericProxyConfig(
+                http_url=http_proxy_url,
+                https_url=https_proxy_url
+            )
+
+            ytt_api = YouTubeTranscriptApi(proxy_config=proxy_config)
+            transcript = ytt_api.fetch(video_id)
+        else:
+            # Fetch without proxy
+            transcript = YouTubeTranscriptApi.get_transcript(video_id)
+
         return format_transcript(transcript)
 
     except Exception as e:
-        raise Exception(f"Error fetching transcript with proxy: {str(e)}")
+        raise Exception(f"Error fetching transcript: {str(e)}")
 
 @mcp.tool()
 def fetch_instructions(prompt_name: str) -> str:
